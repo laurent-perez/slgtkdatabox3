@@ -1,0 +1,125 @@
+% -*- slang -*-
+
+% slirp_include_rc ("./slirprc-gtk3");
+
+slirp_define_opaque ("GtkOpaque");
+
+% slirp_set_opaque_default ("GObject");
+slirp_define_opaque ("GObject", "GtkOpaque");
+slirp_map_opaque ("GtkDataboxGraph*");
+slirp_map_opaque ("GtkDataboxGrid*");
+slirp_map_opaque ("GtkDataboxMarkers*");
+slirp_map_opaque ("GtkAdjustment*");
+slirp_map_opaque ("GList");
+
+% slirp_set_opaque_default ("GtkWidget");
+slirp_define_opaque ("GtkWidget", "GObject");
+slirp_map_opaque ("GtkDatabox*");
+slirp_map_opaque ("GtkDataboxRuler*");
+
+slirp_define_opaque ("Cairo", "void_ptr");
+slirp_map_opaque ("cairo_t*");
+slirp_define_opaque ("CairoSurface", "void_ptr");
+slirp_map_opaque ("cairo_surface_t*");
+
+slirp_map_struct ("GdkRGBA*");
+
+slirp_map_int ("GtkOrientation");
+slirp_map_int ("GtkShadowType");
+slirp_map_int ("PangoAlignment");
+
+slirp_map_int ("GtkDataboxMarkerPosition");
+slirp_map_int ("GtkDataboxTextPosition");
+slirp_map_int ("GtkDataboxMarkersType");
+slirp_map_int ("GtkDataboxScaleType");
+
+slirp_map_char ("gchar");
+slirp_map_uchar ("guchar");
+slirp_map_string ("gchar*");
+slirp_map_ushort ("gshort");
+slirp_map_ushort ("gushort");
+slirp_map_int ("gint");
+slirp_map_uint ("guint");
+slirp_map_long ("glong");
+slirp_map_long ("gssize");
+slirp_map_ulong ("gsize");
+slirp_map_ulong ("gulong");
+slirp_map_float ("gfloat");
+slirp_map_double ("gdouble");
+slirp_map_int ("gboolean");
+slirp_map_ulong ("GType");
+
+slirp_map_int64 ("gint64");
+slirp_map_int32 ("gint32");
+slirp_map_uint32 ("guint32");
+slirp_map_uint64 ("guint64");
+slirp_map_char ("gint8");
+slirp_map_uchar ("guint8");
+slirp_map_uint16 ("guint16");
+slirp_map_int16 ("gint16");
+
+#ignore
+gtk_databox_graph_get_color
+gtk_databox_graph_get_rgba
+% gtk_databox_graph_set_color
+gtk_databox_graph_set_rgba
+% gtk_databox_set_bg_color
+gtk_databox_bars_new
+gtk_databox_bars_new_full
+gtk_databox_grid_new
+gtk_databox_grid_array_new
+gtk_databox_lines_new
+gtk_databox_lines_new_full
+gtk_databox_markers_new
+gtk_databox_markers_new_full
+gtk_databox_offset_bars_new
+gtk_databox_offset_bars_new_full
+gtk_databox_points_new
+gtk_databox_regions_new
+gtk_databox_ruler_set_manual_ticks
+gtk_databox_ruler_set_manual_tick_cnt
+gtk_databox_ruler_set_manual_tick_label
+gtk_databox_values_to_xpixels
+gtk_databox_values_to_ypixels
+gtk_databox_ruler_set_manual_tick_cnt
+gtk_databox_ruler_set_manual_ticks
+gtk_databox_ruler_set_manual_tick_labels
+gtk_databox_ruler_get_manual_tick_cnt
+gtk_databox_ruler_get_manual_ticks
+gtk_databox_ruler_get_manual_tick_labels
+gtk_databox_grid_get_hline_vals
+gtk_databox_grid_get_vline_vals
+#end
+
+#define G_BEGIN_DECLS
+
+#argmap (out) gfloat *min_x
+$return;
+#end
+
+#copy gfloat *min_x {gfloat *max_x, gfloat *min_y, gfloat *max_y, gfloat *left, gfloat *right, gfloat *top, gfloat *bottom}
+#copy gfloat *min_x {gdouble *lower, gdouble *upper, gdouble *position}
+
+#argmap (out) GtkWidget **p_box
+   (void) SLang_push_opaque (GtkWidget_Type, (void*) $1, 0);
+#end
+
+#copy GtkWidget **p_box {GtkWidget **p_grid}
+
+#retmap const GList*
+   const GList *list;
+   SLang_List_Type *lst;
+   if (NULL == (lst = SLang_create_list (0)))
+      goto free_and_return;
+   for (list = retval ; list ; list = g_list_next (list))
+   {
+      (void) SLang_push_opaque (GtkOpaque_Type, (void*) list->data, 0);
+      if (-1 == SLang_list_append (lst, -1))
+        goto free_and_return;
+   }
+   (void) SLang_push_list (lst, 1);
+#end
+
+#prototype
+const GList *gtk_databox_get_graphs (GtkDatabox *box);
+#end

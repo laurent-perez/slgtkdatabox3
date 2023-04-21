@@ -1,0 +1,11 @@
+#! /bin/sh
+
+# Input is a series of .lst file names, either with or w/out .lst suffix
+for l in $* ; do
+   l=`echo $l | cut -d. -f1`
+   dir=$l/
+   for entry in `sed '/^#/d' $l.lst ` ; do
+      HEADERS="${HEADERS} $entry"
+   done
+done
+if [ -n "$HEADERS" ] ; then echo $HEADERS ; fi

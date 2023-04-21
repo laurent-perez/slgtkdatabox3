@@ -1,0 +1,1 @@
+slirp -m gtkdatabox3 -noautotype -noincludes -noinit -I /usr/include `pkg-config --cflags-only-I gtkdatabox` `./listhdrs gtkdatabox3.lst`
